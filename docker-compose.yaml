@@ -1,0 +1,29 @@
+version: "3.3"
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+        POSTGRES_PASSWORD: supersecret
+    ports:
+        - 12345:5432
+    restart: on-failure
+    volumes:
+      - data_pg:/var/lib/postgresql/data
+  webapp:
+    image: webapp
+    build: ./webapp
+    ports:
+        - 12347:8000
+    environment:
+        POSTGRES_PASSWORD: supersecret
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static/html:/usr/share/nginx/html:ro
+    ports:
+        - 12346:80
+
+
+volumes:
+  data_pg:

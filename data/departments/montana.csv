@@ -1,0 +1,11 @@
+name,state,dept_type,url
+billings police department,montana,city agencies,https://ci.billings.mt.us/101/Police
+montana department of corrections,montana,state agencies,https://app.mt.gov/conweb/
+"montana department of fish, wildlife, and parks",montana,state agencies,http://fwp.mt.gov/
+montana department of justice - division of criminal investigations,montana,state agencies,https://dojmt.gov/enforcement/
+montana department of justice - fire prevention and investigation,montana,state agencies,https://dojmt.gov/enforcement/investigations-bureau/fire-prevention/
+montana department of justice - gambling investigation bureau,montana,state agencies,https://dojmt.gov/gaming/
+"montana department of transportation, motor carrier services",montana,state agencies,https://www.mdt.mt.gov/mdt/organization/mcs.shtml
+montana highway patrol,montana,state agencies,https://dojmt.gov/highwaypatrol/
+state university police department,montana,college and university agencies,https://www.montana.edu/police/
+university of montana office of public security,montana,college and university agencies,http://www.umt.edu/police/
