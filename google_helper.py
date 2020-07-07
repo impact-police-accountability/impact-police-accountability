@@ -46,7 +46,3 @@ def get_google_search():
 
 
 google_search = get_google_search()
-
-
-if "__main__" == __name__:
-    print(google_search("tiger"))
