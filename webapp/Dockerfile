@@ -3,17 +3,17 @@ FROM ubuntu:latest
 RUN groupadd --system falcon
 RUN useradd --system -g falcon falcon
 
-RUN apt-get update
-RUN apt-get dist-upgrade -y
-RUN apt-get install -y \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update > /dev/null
+RUN DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y > /dev/null
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential \
     libev-dev \
     libpython3-dev \
     python3 \
     python3-distutils \
-    wget
+    wget > /dev/null
 
-RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN wget --quiet https://bootstrap.pypa.io/get-pip.py
 
 RUN python3 get-pip.py
 

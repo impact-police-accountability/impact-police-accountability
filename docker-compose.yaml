@@ -16,6 +16,8 @@ services:
         - 12347:8000
     environment:
         POSTGRES_PASSWORD: supersecret
+    links:
+        - postgres:postgres
   nginx:
     image: nginx:latest
     volumes:
@@ -23,6 +25,8 @@ services:
       - ./static/html:/usr/share/nginx/html:ro
     ports:
         - 12346:80
+    links:
+        - webapp:webapp
 
 
 volumes:
