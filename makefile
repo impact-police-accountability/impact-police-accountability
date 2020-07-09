@@ -13,6 +13,7 @@ deploy: images
 
 lint:
 	python -m pip install --upgrade isort black > /dev/null
+	python -m pip install --upgrade pylint > /dev/null
 	python -m black $(shell find . -name "*.py")
 	python -m isort $(shell find . -name "*.py")
 
