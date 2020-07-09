@@ -1,0 +1,23 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+bjoern = "==3.1.0"
+boto3 = "==1.14.19"
+beautifulsoup4 = "==4.9.1"
+cloudscraper = "==1.2.42"
+falcon = "==2.0.0"
+isort = "==5.0.6"
+psycopg2 = "==2.8.5"
+requests = "==2.24.0"
+black = "==19.10b0"
+
+[requires]
+python_version = "3.8.2"
+
+[pipenv]
+allow_prereleases = true
