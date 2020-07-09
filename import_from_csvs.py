@@ -38,13 +38,16 @@ def ingest_from_csvs():
         conn.cursor_factory = psycopg2.extras.RealDictCursor
         cursor = conn.cursor()
         cursor.execute("""DROP TABLE IF EXISTS departments""")
-        cursor.execute("""CREATE TABLE departments (name text, state text, dept_type text, url text)""")
+        cursor.execute(
+            """CREATE TABLE departments (name text, state text, dept_type text, url text)"""
+        )
         cursor.execute("""CREATE UNIQUE INDEX ON departments (name, state)""")
         cursor.execute("""CREATE UNIQUE INDEX ON departments (state, name)""")
         for root, _, files in os.walk("data/departments/"):
             for ifile in files:
                 import_one_state(cursor, os.path.join(root, ifile))
         conn.commit()
+
 
 def main():
     """For each state ask wikipedia for a list of law enforcement agencies there and write those to DB."""
