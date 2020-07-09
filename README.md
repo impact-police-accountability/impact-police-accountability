@@ -53,3 +53,4 @@ _All scripts should have a `--help` option which provides a concise description 
     └── app - simple python app in order to actually do a little bit of processing of a request
 ```
 
+`makefile` - single point of entry for user/developer - `make up` should create & start your db, import the data and start nginx and a python webserver.
