@@ -13,6 +13,8 @@ import bs4
 import cloudscraper
 import requests
 
+from config import get_bucket
+
 global_session = cloudscraper.CloudScraper()
 global_session.headers.update(
     {
@@ -51,7 +53,7 @@ def get_lawyers_for_zipcode(zipcode):
 def record_lawyers_on_s3(zipcode):
     """Given a zipcode, fetch civil rights lawyers for that zipcode and dump the result on S3."""
     # TODO: probably fetch this data down from S3, process and save in DB
-    bucket = boto3.resource("s3").Bucket("protect-the-people")
+    bucket = get_bucket()
     keyname = "lawyers/{}.json".format(zipcode)
     keyobj = bucket.Object(keyname)
     try:

@@ -7,9 +7,11 @@ import time
 import boto3
 import requests
 
+from config import get_bucket
+
 
 def get_google_search():
-    bucket = boto3.resource("s3").Bucket("protect-the-people")
+    bucket = get_bucket()
     gce_api_key = os.environ["GCE_API_KEY"]
 
     def md5(istr):
