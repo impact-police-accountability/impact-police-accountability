@@ -1,9 +1,12 @@
 """
 Get info about lawyers and law firms prioritizing high population zipcodes, saving the data to S3.
 """
+import argparse
 import csv
+import datetime
 import json
 import time
+import traceback
 
 import boto3
 import bs4
@@ -21,8 +24,12 @@ global_session.headers.update(
 def get_lawyers_for_zipcode(zipcode):
     """Actually make the http request to get civil rights lawyers for a zipcode..., parse the data out of the html."""
     # TODO: cache the daylights out of this... because it's pretty gray-hat
-    time.sleep(9)
-    print("Getting lawyers for {}...".format(zipcode))
+    time.sleep(3)
+    print(
+        "Getting lawyers for {} @ {:%H:%M:%S}...".format(
+            zipcode, datetime.datetime.now()
+        )
+    )
     response = global_session.get(
         "https://www.avvo.com/search/lawyer_search",
         params={"q": "civil rights", "loc": zipcode,},
@@ -58,6 +65,7 @@ def record_lawyers_on_s3(zipcode):
 
 def gen_zipcodes():
     """Generate a sequence of zipcodes, from highest to lowest population, truncated after 3650 (~50% of us population)."""
+    emit = False
     with open("data/pop_by_zip_only.csv") as fh:
         reader = csv.DictReader(fh)
         for i, iline in enumerate(reader):
@@ -69,16 +77,26 @@ def gen_zipcodes():
             if "X" in iline["zipcode"]:
                 # this is sad, but I don't know what to do
                 continue
-            yield iline["zipcode"]
+            if "70119" == iline["zipcode"]:
+                emit = True
+            if emit:
+                yield iline["zipcode"]
+
 
 def get_args():
     parser = argparse.ArgumentParser(description=__doc__)
     return parser.parse_args()
 
+
 def main():
     get_args()
     for zipcode in gen_zipcodes():
-        record_lawyers_on_s3(zipcode)
+        try:
+            record_lawyers_on_s3(zipcode)
+        except KeyboardInterrupt:
+            break
+        except:
+            print(traceback.format_exc())
 
 
 if "__main__" == __name__:
