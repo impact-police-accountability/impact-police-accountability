@@ -42,7 +42,7 @@ _All scripts should have a `--help` option which provides a concise description 
 
 ## <a id='project_org'>Organization of Project</a>
 
-
+```
 ├── data - parent of all data files (trying to avoid putting things on s3 in order to make things as portable as possible)
 │   ├── departments - information about law enforcement agencies - as csv, partitioned by state, imported by `import_from_csvs.py`
 │   └── pop_by_zip_only.csv.xz - zipcode and population (as of 2000) for united states zipcodes - thought being when we have to prioitize resources targeting higher population densities can maximize effectiveness.
@@ -51,3 +51,5 @@ _All scripts should have a `--help` option which provides a concise description 
 │   └── html - believe you can drop static files here in order to have nginx serve them directly
 └── webapp
     └── app - simple python app in order to actually do a little bit of processing of a request
+```
+
