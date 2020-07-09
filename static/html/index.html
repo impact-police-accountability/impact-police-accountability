@@ -1,0 +1,84 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<body>
+    <div id="app">
+        <nav id="navbar">
+            <span class="nav-el">Team Police Accountability</span>
+            <span class="nav-el"><a href="/search">Search</a></span>
+            <span class="nav-el"><a href="/about">About</a></span>
+            <span class="nav-el"><a href="/template">Template</a></span>
+            <span class="nav-el"><a href="/connect">Connect</a></span>
+        </nav>
+        <div>Zip Code: <input v-model="location"></div>
+        <button v-on:click="fetchContacts">Get Contacts</button>
+        <div v-if="location != ''">
+            <div class="legal-title">Legal Contacts</div>
+            <ul class="legal-list">
+                <contact-card v-for="legal in contacts.legal_resources" v-bind:contact="legal"/>
+            </ul>
+            <div class="elected-title">Elected Contacts</div>
+            <ul class="elected-list">
+                <contact-card v-for="government in contacts.government_resources" v-bind:contact="government"/>
+            </ul>
+            <div class="government-title">Government Contacts</div>
+            <ul class="government-list">
+                <contact-card v-for="leo in contacts.law_enforcement_resources" v-bind:contact="leo"/>
+            </ul>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    Vue.component('contact-card', {
+        props: ["contact"],
+        template: `
+        <li>
+            <div class="contact-card">
+                <span class="contact-organization">{{ contact.organization }}</span>
+                <span class="contact-contact_name">{{ contact.contact_name }}</span>
+                <span class="contact-phone_number">{{ contact.phone_number }}</span>
+                <span class="contact-address">{{ contact.address }}</span>
+                <span class="contact-url">{{ contact.url }}</span>
+                <span class="contact-email">{{ contact.email }}</span>            
+            </div>
+        </li>
+        `
+    })
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        location: "",
+        contacts: {
+            "government_resources": [{
+                "organization": "ORG1",
+                "contact_name": "Some Name",
+                "phone_number": "111-222-3333",
+                "address": "some address",
+                "url": "some url",
+                "email": "foo@bar.com"
+            }],
+            "law_enforcement_resources": [{
+                "organization": "ORG2",
+                "contact_name": "Some Other Name",
+                "phone_number": "111-222-3333",
+                "address": "some address",
+                "url": "some url",
+                "email": "foo@bar.com"
+            }],
+            "legal_resources": [{
+                "organization": "ORG3",
+                "contact_name": "Some Other Other Name",
+                "phone_number": "111-222-3333",
+                "address": "some address",
+                "url": "some url",
+                "email": "foo@bar.com"
+            }]
+        }
+      },
+      methods: {
+        fetchContacts: function() {
+            return "foo"
+        }
+      }
+    })
+</script>
