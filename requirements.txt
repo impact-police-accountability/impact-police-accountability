@@ -1,9 +1,0 @@
-bjoern
-black
-boto3
-bs4
-cloudscraper
-falcon
-isort
-psycopg2
-requests
