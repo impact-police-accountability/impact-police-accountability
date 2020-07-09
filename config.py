@@ -1,3 +1,4 @@
+"""Silly things that I needed somewhere to dump."""
 import boto3
 
 DBAUTH = {

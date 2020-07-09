@@ -2,6 +2,7 @@
 
 import json
 import time
+import argparse
 
 import psycopg2
 import psycopg2.extras
@@ -108,6 +109,7 @@ def ensure_schema(conn):
 
 
 def main():
+    get_args()
     bucket = get_bucket()
     done = 0
     start_time = time.time()

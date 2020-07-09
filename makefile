@@ -13,6 +13,7 @@ ingest: deploy
 
 deploy: images
 	daemon --chdir=$(CURDIR) --output=$(LOG_PATH) -- docker-compose up
+	python wait_on_pg.py
 
 lint:
 	python -m black $(shell find . -name "*.py")
@@ -28,10 +29,10 @@ images:
 services_working: nginx_proxy_working nginx_working webapp_working
 
 nginx_proxy_working: ingest
-	@curl --silent --fail http://localhost:12346/foo > /dev/null  || { echo "Nginx proxy to webapp is not working!"; exit 1; }
+	@curl --silent --fail http://localhost:12346/foo > /dev/null  || { echo "Nginx proxy to webapp is not working!"; tail -n 50 $(LOG_PATH); exit 1; }
 
 nginx_working: ingest
-	@curl --silent --fail http://localhost:12346/statictest > /dev/null || { echo "Nginx static files route is not working!"; exit 1; }
+	@curl --silent --fail http://localhost:12346/statictest > /dev/null || { echo "Nginx static files route is not working!"; tail -n 50 $(LOG_PATH); exit 1; }
 
 webapp_working: ingest
-	@curl --silent --fail http://localhost:12347/foo > /dev/null || { echo "The webapp is not working!"; exit 1; }
+	@curl --silent --fail http://localhost:12347/foo > /dev/null || { echo "The webapp is not working!"; tail -n 50 $(LOG_PATH); exit 1; }

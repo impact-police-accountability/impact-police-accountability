@@ -8,10 +8,8 @@ import json
 import time
 import traceback
 
-import boto3
 import bs4
 import cloudscraper
-import requests
 
 from config import get_bucket
 
