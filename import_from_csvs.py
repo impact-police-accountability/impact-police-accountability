@@ -2,13 +2,13 @@
 import argparse
 import csv
 import os
-import re
 import time
 
 import psycopg2
 import psycopg2.extras
 
 from config import DBAUTH
+from wait_on_pg import wait_on_pg
 
 
 def import_one_state(cursor, filepath):
@@ -52,15 +52,9 @@ def ingest_from_csvs():
 def main():
     """For each state ask wikipedia for a list of law enforcement agencies there and write those to DB."""
     get_args()
+    wait_on_pg()
     start = time.time()
-    while True:
-        try:
-            return ingest_from_csvs()
-        except Exception as oops:
-            if time.time() - start < 5:
-                time.sleep(0.5)
-            else:
-                raise
+    return ingest_from_csvs()
 
 
 if "__main__" == __name__:

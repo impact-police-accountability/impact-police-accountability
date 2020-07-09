@@ -1,21 +1,16 @@
 import argparse  # for parsing passed parameters through terminal
-import json
-from ipaddress import ip_address
 
 import bjoern
 import falcon
+from resources.hello import HelloResource
+from resources.zipinfo import ZipInfoResource
 
 wsgi_app = api = application = falcon.API()
 
 # -- Edit Here --
-class IndexResource:
-    def on_get(self, request, response):
-        print("hello world")
-        response.body = json.dumps("hello world")
-
-
 api.req_options.auto_parse_form_urlencoded = True
-api.add_route("/foo", IndexResource())  # attach resources to API
+api.add_route("/hello", HelloResource())
+api.add_route("/{zipcode}", ZipInfoResource())
 # -- End of Edit --
 
 

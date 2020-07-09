@@ -4,7 +4,6 @@ import json
 import os
 import time
 
-import boto3
 import requests
 
 from config import get_bucket

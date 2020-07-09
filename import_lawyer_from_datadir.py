@@ -1,7 +1,6 @@
 """Fetch lawyer data from S3 and pack it into a DB, probably then export to """
 
 import csv
-import json
 import time
 
 import psycopg2
