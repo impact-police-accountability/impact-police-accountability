@@ -22,9 +22,11 @@ def export_table(cursor, tablename):
         writer.writeheader()
         writer.writerows(dict(x) for x in cursor)
 
+
 def get_args():
     parser = argparse.ArgumentParser(description=__doc__)
     return vars(parser.parse_args())
+
 
 def main():
     """Export lawyer data to the datadir."""

@@ -6,7 +6,10 @@ clean: down
 	/bin/rm -vf $(LOG_PATH)
 
 ingest: deploy
+	# import law enforcement agencies
 	python import_from_csvs.py
+	# import lawyers
+	python import_lawyer_from_datadir.py
 
 deploy: images
 	daemon --chdir=$(CURDIR) --output=$(LOG_PATH) -- docker-compose up
