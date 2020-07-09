@@ -7,9 +7,11 @@ clean: down
 
 ingest: deploy
 	# import law enforcement agencies
-	true || python import_from_csvs.py
+	python import_from_csvs.py
 	# import lawyers
-	true || python import_lawyer_from_datadir.py
+	python import_lawyer_from_datadir.py
+	# import geodata?
+	python import_geodata.py
 
 deploy: images
 	daemon --chdir=$(CURDIR) --output=$(LOG_PATH) -- docker-compose up

@@ -94,6 +94,7 @@ class ZipInfoResource:
             attempts.pop()
             try:
                 self.conn = psycopg2.connect(**DBAUTH)
+                self.conn.autocommit = True # everything we're doing is read only...
                 self.conn.cursor_factory = psycopg2.extras.RealDictCursor
                 return
             except Exception:
@@ -109,14 +110,14 @@ class ZipInfoResource:
         zipcode = kwargs.get("zipcode", "00000")
         query_kwargs = {"zipcode": zipcode}
 
-        # TODO: this could miss!
         info_from_zip = self._zip_to_info.get(
             zipcode, {"state_abbr": "XX", "city": "xxxxx"}
         )
 
         state_abbr = info_from_zip["state_abbr"]
         city = info_from_zip["city"]
-        full_state = self._state_abbr_to_full.get(state_abbr, "xxxxx")
+        full_state = self._state_abbr_to_full.get(state_abbr.upper(), "xxxxx")
+        print(locals())
 
         with self.conn.cursor() as cursor:
             # get lawyer info
@@ -135,17 +136,26 @@ class ZipInfoResource:
             # get law enforcement info
             # state level
             cursor.execute(
-                "SELECT * FROM departments WHERE dept_type ILIKE %(statepattern)s AND state = %(state)s",
-                {"state": full_state, "statepattern": "%state%",},
+                "SELECT * FROM departments WHERE dept_type ILIKE %(statepattern)s AND LOWER(state) = %(state)s",
+                {"state": full_state.lower(), "statepattern": "%state%",},
             )
             state_level = cursor.fetchall()
 
             # non-state level (this feels bad and wrong)
             cursor.execute(
-                """SELECT * FROM departments WHERE NAME ILIKE %(city_name_pattern)s AND dept_type NOT ILIKE %(statepattern)s AND state = %(state)s""",
+                " ".join("""
+                SELECT
+                    *
+                FROM
+                    departments
+                WHERE
+                    NAME ILIKE %(city_name_pattern)s AND
+                    dept_type NOT ILIKE %(statepattern)s AND
+                    state = %(state)s
+                """.split()),
                 {
                     "city_name_pattern": "%{}%".format(city.lower()),
-                    "state": full_state,
+                    "state": full_state.lower(),
                     "statepattern": "%state%",
                 },
             )
