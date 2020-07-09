@@ -47,6 +47,8 @@ def main():
         cursor = conn.cursor()
         import_table(cursor, "law_firms")
         import_table(cursor, "lawyers")
+        # truncate zipcodes to 5
+        cursor.execute("UPDATE law_firms SET zipcode = LEFT(zipcode, 5) WHERE zipcode != LEFT(zipcode, 5)")
         conn.commit()
 
 
