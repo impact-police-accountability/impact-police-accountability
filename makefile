@@ -21,3 +21,12 @@ down:
 images:
 	docker-compose build
 	grep image docker-compose.yaml | cut -f 2- -d: | grep : | xargs -n1 -t docker pull
+
+nginx_proxy_working:
+	@curl --silent --fail http://localhost:12346/foo > /dev/null  || { echo "Nginx proxy to webapp is not working!"; exit 1; }
+
+nginx_working:
+	@curl --silent --fail http://localhost:12346/statictest > /dev/null || { echo "Nginx static files route is not working!"; exit 1; }
+
+webapp_working:
+	@curl --silent --fail http://localhost:12347/foo > /dev/null || { echo "The webapp is not working!"; exit 1; }
