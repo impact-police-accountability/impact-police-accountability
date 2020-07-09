@@ -19,6 +19,74 @@ DBAUTH = {
 class ZipInfoResource:
     def __init__(self):
         self.conn = None
+        self._zip_to_info = {}
+        self._reinit()
+
+        # populate _zip_to_info
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT zipcode, city, state_abbr FROM geodata")
+        for row in cursor:
+            row = {k.lower(): v.lower() for k, v in dict(row).items()}
+            zipcode = row.pop("zipcode")
+            self._zip_to_info[zipcode] = row
+        self._state_abbr_to_full = {
+            "AL": "Alabama",
+            "AK": "Alaska",
+            "AS": "American Samoa",
+            "AZ": "Arizona",
+            "AR": "Arkansas",
+            "CA": "California",
+            "CO": "Colorado",
+            "CT": "Connecticut",
+            "DE": "Delaware",
+            "DC": "District of Columbia",
+            "FL": "Florida",
+            "GA": "Georgia",
+            "GU": "Guam",
+            "HI": "Hawaii",
+            "ID": "Idaho",
+            "IL": "Illinois",
+            "IN": "Indiana",
+            "IA": "Iowa",
+            "KS": "Kansas",
+            "KY": "Kentucky",
+            "LA": "Louisiana",
+            "ME": "Maine",
+            "MD": "Maryland",
+            "MA": "Massachusetts",
+            "MI": "Michigan",
+            "MN": "Minnesota",
+            "MS": "Mississippi",
+            "MO": "Missouri",
+            "MT": "Montana",
+            "NE": "Nebraska",
+            "NV": "Nevada",
+            "NH": "New Hampshire",
+            "NJ": "New Jersey",
+            "NM": "New Mexico",
+            "NY": "New York",
+            "NC": "North Carolina",
+            "ND": "North Dakota",
+            "MP": "Northern Mariana Islands",
+            "OH": "Ohio",
+            "OK": "Oklahoma",
+            "OR": "Oregon",
+            "PA": "Pennsylvania",
+            "PR": "Puerto Rico",
+            "RI": "Rhode Island",
+            "SC": "South Carolina",
+            "SD": "South Dakota",
+            "TN": "Tennessee",
+            "TX": "Texas",
+            "UT": "Utah",
+            "VT": "Vermont",
+            "VI": "Virgin Islands",
+            "VA": "Virginia",
+            "WA": "Washington",
+            "WV": "West Virginia",
+            "WI": "Wisconsin",
+            "WY": "Wyoming",
+        }
 
     def _reinit(self):
         attempts = list(range(5))
@@ -38,9 +106,18 @@ class ZipInfoResource:
         if self.conn is None:
             self._reinit()
 
-        query_kwargs = {"zipcode": kwargs.get("zipcode", "00000")}
-        full_state = "massachusetts"
-        city = "Boston"
+        zipcode = kwargs.get("zipcode", "00000")
+        query_kwargs = {"zipcode": zipcode}
+
+        # TODO: this could miss!
+        info_from_zip = self._zip_to_info.get(
+            zipcode, {"state_abbr": "XX", "city": "xxxxx"}
+        )
+
+        state_abbr = info_from_zip["state_abbr"]
+        city = info_from_zip["city"]
+        full_state = self._state_abbr_to_full.get(state_abbr, "xxxxx")
+
         with self.conn.cursor() as cursor:
             # get lawyer info
             cursor.execute(
@@ -50,17 +127,16 @@ class ZipInfoResource:
             lawyer_info = cursor.fetchall()
 
             # get government info
-            cursor.execute("SELECT 'the best agency' AS name UNION ALL SELECT 'the second best agency'")
+            cursor.execute(
+                "SELECT 'the best agency' AS name UNION ALL SELECT 'the second best agency'"
+            )
             gov_info = cursor.fetchall()
 
             # get law enforcement info
             # state level
             cursor.execute(
                 "SELECT * FROM departments WHERE dept_type ILIKE %(statepattern)s AND state = %(state)s",
-                {
-                    "state": full_state,
-                    "statepattern": "%state%",
-                }
+                {"state": full_state, "statepattern": "%state%",},
             )
             state_level = cursor.fetchall()
 
@@ -71,11 +147,10 @@ class ZipInfoResource:
                     "city_name_pattern": "%{}%".format(city.lower()),
                     "state": full_state,
                     "statepattern": "%state%",
-                }
+                },
             )
             local_level = cursor.fetchall()
             law_enforcement_info = local_level + state_level
-
 
         res = {
             "government_resources": gov_info,

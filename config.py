@@ -2,11 +2,12 @@
 import boto3
 
 DBAUTH = {
+    "connect_timeout": 1,
     "dbname": "postgres",
+    "host": "localhost",
     "password": "supersecret",
     "port": 12345,
     "user": "postgres",
-    "host": "localhost",
 }
 
 S3_BUCKET_NAME = "protect-the-people"
