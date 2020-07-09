@@ -5,6 +5,7 @@ DBAUTH = {
     "password": "supersecret",
     "port": 12345,
     "user": "postgres",
+    "host": "localhost",
 }
 
 S3_BUCKET_NAME = "protect-the-people"
