@@ -1,8 +1,8 @@
 """Fetch lawyer data from S3 and pack it into a DB, probably then export to """
 
+import argparse
 import json
 import time
-import argparse
 
 import psycopg2
 import psycopg2.extras
