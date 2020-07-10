@@ -162,7 +162,7 @@
       },
       methods: {
         fetchContacts: async function() {
-            const res = await axios.get("http://localhost:5000/" + this.zip);
+            const res = await axios.get(`http://` + location.hostname + `/` + this.zip);
             this.contacts = res.data
             console.log(this.contacts);
             return res
