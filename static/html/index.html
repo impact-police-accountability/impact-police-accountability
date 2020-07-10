@@ -69,12 +69,12 @@
         template: `
         <li>
             <div class="contact-card">
-                <span class="contact-organization">{{ contact.organization }}</span>
-                <span class="contact-contact_name">{{ contact.contact_name }}</span>
-                <span class="contact-phone_number">{{ contact.phone_number }}</span>
-                <span class="contact-address">{{ contact.address }}</span>
-                <span class="contact-url">{{ contact.url }}</span>
-                <span class="contact-email">{{ contact.email }}</span>            
+                <div class="contact-organization">{{ contact.organization }}</div>
+                <div class="contact-contact_name">{{ contact.contact_name }}</div>
+                <div class="contact-phone_number">{{ contact.phone_number }}</div>
+                <div class="contact-address">{{ contact.address }}</div>
+                <div class="contact-url">{{ contact.url }}</div>
+                <div class="contact-email">{{ contact.email }}</div>            
             </div>
         </li>
         `
@@ -85,9 +85,8 @@
         template: `
         <li>
             <div class="contact-card">
-                <span class="contact-name">{{ contact.name }}</span>
-                <span class="contact-state">{{ contact.state }}</span>
-                <span class="contact-url">{{ contact.url }}</span>
+                <div class="contact-name"><a href="{{ contact.url }}"> {{ contact.name }}</a></div>
+                <div class="contact-state">{{ contact.state }}</div>
             </div>
         </li>
         `
@@ -98,10 +97,10 @@
         template: `
         <li>
             <div class="contact-card">
-                <span class="contact-name">{{ contact.name }}</span>
-                <span class="contact-phones">{{ contact.phones }}</span>
-                <span class="contact-urls">{{ contact.urls }}</span>
-                <span class="contact-emails">{{ contact.emails }}</span>
+                <div class="contact-name">{{ contact.name }}</div>
+                <div class="contact-phones">{{ contact.phones }}</div>
+                <div class="contact-urls">{{ contact.urls }}</div>
+                <div class="contact-emails">{{ contact.emails }}</div>
             </div>
         </li>
         `
@@ -112,11 +111,11 @@
         template: `
         <li>
             <div class="contact-card">
-                <span class="contact-name">{{ contact.lawyer_name }}</span>
-                <span class="contact-firm">{{ contact.lawyer_firm_name }}</span>
-                <span class="contact-phone">{{ contact.phone_number }}</span>
-                <span class="contact-addr">{{ contact.street_address }}, {{ contact.city }}, {{ contact.state }}, {{ contact.zipcode }}</span>
-                <span class="contact-emails">{{ contact.emails }}</span>
+                <div class="contact-name">{{ contact.lawyer_name }}</div>
+                <div class="contact-firm">{{ contact.lawyer_firm_name }}</div>
+                <div class="contact-phone">{{ contact.phone_number }}</div>
+                <div class="contact-addr">{{ contact.street_address }}, {{ contact.city }}, {{ contact.state }}, {{ contact.zipcode }}</div>
+                <div class="contact-emails">{{ contact.emails }}</div>
             </div>
         </li>
         `
@@ -163,7 +162,7 @@
       },
       methods: {
         fetchContacts: async function() {
-            const res = await axios.get(`http://` + location.hostname + `/` + this.zip);
+            const res = await axios.get("http://localhost:5000/" + this.zip);
             this.contacts = res.data
             console.log(this.contacts);
             return res
