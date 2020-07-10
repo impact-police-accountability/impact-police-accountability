@@ -4,26 +4,37 @@
     <div id="app">
         <nav id="navbar">
             <span class="nav-el">Team Police Accountability</span>
-            <span class="nav-el"><a href="/search">Search</a></span>
-            <span class="nav-el"><a href="/about">About</a></span>
-            <span class="nav-el"><a href="/template">Template</a></span>
-            <span class="nav-el"><a href="/connect">Connect</a></span>
+            <span class="nav-el"><a href="#/contacts" v-on:click="tab = 'contacts'">Search</a></span>
+            <span class="nav-el"><a href="#/about" v-on:click="tab = 'about'">>About</a></span>
+            <span class="nav-el"><a href="#/template" v-on:click="tab = 'template'">>Template</a></span>
+            <span class="nav-el"><a href="#/connect" v-on:click="tab = 'connect'">>Connect</a></span>
         </nav>
-        <div>Zip Code: <input v-model="location"></div>
-        <button v-on:click="fetchContacts">Get Contacts</button>
-        <div v-if="contacts != null">
-            <div class="legal-title">Legal Contacts</div>
-            <ul class="legal-list">
-                <contact-card v-for="legal in contacts.legal_resources" v-bind:contact="legal"/>
-            </ul>
-            <div class="elected-title">Elected Contacts</div>
-            <ul class="elected-list">
-                <politico-contact-card v-for="government in contacts.government_resources" v-bind:contact="government"/>
-            </ul>
-            <div class="government-title">Government Contacts</div>
-            <ul class="government-list">
-                <contact-card v-for="leo in contacts.law_enforcement_resources" v-bind:contact="leo"/>
-            </ul>
+        <div class="template-tab" v-if="tab == 'template'">
+            template
+        </div>
+        <div class="about-tab" v-if="tab == 'about'">
+            about
+        </div>
+        <div class="connect-tab" v-if="tab == 'connect'">
+            connect
+        </div>
+        <div class="contacts-tab" v-if="tab == 'contacts'">
+            <div>Zip Code: <input v-model="location"></div>
+            <button v-on:click="fetchContacts">Get Contacts</button>
+            <div v-if="contacts != null">
+                <div class="legal-title">Legal Contacts</div>
+                <ul class="legal-list">
+                    <contact-card v-for="legal in contacts.legal_resources" v-bind:contact="legal"/>
+                </ul>
+                <div class="elected-title">Elected Contacts</div>
+                <ul class="elected-list">
+                    <politico-contact-card v-for="government in contacts.government_resources" v-bind:contact="government"/>
+                </ul>
+                <div class="government-title">Government Contacts</div>
+                <ul class="government-list">
+                    <contact-card v-for="leo in contacts.law_enforcement_resources" v-bind:contact="leo"/>
+                </ul>
+            </div>
         </div>
     </div>
 </body>
@@ -62,6 +73,7 @@
     var app = new Vue({
       el: '#app',
       data: {
+        tab: "contacts",
         location: "",
         contacts: null
       },
