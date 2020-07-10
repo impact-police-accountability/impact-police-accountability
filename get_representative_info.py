@@ -1,6 +1,6 @@
 import argparse
-import os
 import json
+import os
 
 import requests
 
@@ -9,6 +9,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("zipcode")
     return vars(parser.parse_args())
+
 
 def get_info_for_zip(zipcode):
     response = requests.get(
@@ -25,9 +26,7 @@ def get_info_for_zip(zipcode):
 
 def main():
     args = get_args()
-    print(
-        json.dumps(get_info_for_zip(args["zipcode"]), indent=4, sort_keys=True)
-    )
+    print(json.dumps(get_info_for_zip(args["zipcode"]), indent=4, sort_keys=True))
 
 
 if "__main__" == __name__:

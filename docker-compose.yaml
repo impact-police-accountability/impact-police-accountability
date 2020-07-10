@@ -16,6 +16,7 @@ services:
         - 12347:8000
     environment:
         POSTGRES_PASSWORD: supersecret
+        GCE_API_KEY: "${GCE_API_KEY}"
     links:
         - postgres:postgres
   nginx:

@@ -1,11 +1,13 @@
 """Get info about the given zipcode for the frontend."""
 import json
+import os
 import sys
 import time
 import traceback
 
 import psycopg2
 import psycopg2.extras
+import requests
 
 DBAUTH = {
     "dbname": "postgres",
@@ -14,6 +16,19 @@ DBAUTH = {
     "user": "postgres",
     "host": "postgres",  # the name of the docker container we want to talk to is postgres and it's linked to this one by that name
 }
+
+
+def get_gov_info_for_zip(zipcode):
+    response = requests.get(
+        "https://www.googleapis.com/civicinfo/v2/representatives",
+        params={
+            "address": zipcode,
+            "includeOffices": True,
+            "key": os.environ["GCE_API_KEY"],
+        },
+    )
+    response.raise_for_status()
+    return response.json()
 
 
 class ZipInfoResource:
@@ -117,6 +132,7 @@ class ZipInfoResource:
         state_abbr = info_from_zip["state_abbr"]
         city = info_from_zip["city"]
         full_state = self._state_abbr_to_full.get(state_abbr.upper(), "xxxxx")
+        gov_info_for_zip = get_gov_info_for_zip(zipcode)
         print(locals())
 
         with self.conn.cursor() as cursor:
@@ -126,12 +142,6 @@ class ZipInfoResource:
                 query_kwargs,
             )
             lawyer_info = cursor.fetchall()
-
-            # get government info
-            cursor.execute(
-                "SELECT 'the best agency' AS name UNION ALL SELECT 'the second best agency'"
-            )
-            gov_info = cursor.fetchall()
 
             # get law enforcement info
             # state level
@@ -165,7 +175,7 @@ class ZipInfoResource:
             law_enforcement_info = local_level + state_level
 
         res = {
-            "government_resources": gov_info,
+            "government_resources": gov_info_for_zip["officials"],
             "law_enforcement_resources": law_enforcement_info,
             "legal_resources": lawyer_info,
         }

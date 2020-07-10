@@ -24,7 +24,8 @@ RUN python3 -m pip install --upgrade --no-cache-dir \
     bjoern \
     falcon \
     pip \
-    psycopg2
+    psycopg2 \
+    requests
 
 COPY app app
 
