@@ -94,7 +94,7 @@ class ZipInfoResource:
             attempts.pop()
             try:
                 self.conn = psycopg2.connect(**DBAUTH)
-                self.conn.autocommit = True # everything we're doing is read only...
+                self.conn.autocommit = True  # everything we're doing is read only...
                 self.conn.cursor_factory = psycopg2.extras.RealDictCursor
                 return
             except Exception:
@@ -136,23 +136,25 @@ class ZipInfoResource:
             # get law enforcement info
             # state level
             cursor.execute(
-                "SELECT * FROM departments WHERE dept_type ILIKE %(statepattern)s AND LOWER(state) = %(state)s",
+                "SELECT name, state, url FROM departments WHERE dept_type ILIKE %(statepattern)s AND LOWER(state) = %(state)s",
                 {"state": full_state.lower(), "statepattern": "%state%",},
             )
             state_level = cursor.fetchall()
 
             # non-state level (this feels bad and wrong)
             cursor.execute(
-                " ".join("""
+                " ".join(
+                    """
                 SELECT
-                    *
+                    name, state, url
                 FROM
                     departments
                 WHERE
                     NAME ILIKE %(city_name_pattern)s AND
                     dept_type NOT ILIKE %(statepattern)s AND
                     state = %(state)s
-                """.split()),
+                """.split()
+                ),
                 {
                     "city_name_pattern": "%{}%".format(city.lower()),
                     "state": full_state.lower(),
