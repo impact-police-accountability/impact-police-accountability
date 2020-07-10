@@ -55,7 +55,7 @@
                 </ul>
                 <div class="government-title">Government Contacts</div>
                 <ul class="government-list">
-                    <contact-card v-for="leo in contacts.law_enforcement_resources" v-bind:contact="leo"/>
+                    <leo-contact-card v-for="leo in contacts.law_enforcement_resources" v-bind:contact="leo"/>
                 </ul>
             </div>
         </div>
@@ -74,6 +74,19 @@
                 <span class="contact-address">{{ contact.address }}</span>
                 <span class="contact-url">{{ contact.url }}</span>
                 <span class="contact-email">{{ contact.email }}</span>            
+            </div>
+        </li>
+        `
+    })
+
+    Vue.component('leo-contact-card', {
+        props: ["contact"],
+        template: `
+        <li>
+            <div class="contact-card">
+                <span class="contact-name">{{ contact.name }}</span>
+                <span class="contact-state">{{ contact.state }}</span>
+                <span class="contact-urls">{{ contact.urls }}</span>
             </div>
         </li>
         `
