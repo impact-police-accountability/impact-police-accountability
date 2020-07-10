@@ -85,9 +85,8 @@
         template: `
         <li>
             <div class="contact-card">
-                <div class="contact-name">{{ contact.name }}</div>
+                <div class="contact-name"><a href="{{ contact.url }}"> {{ contact.name }}</a></div>
                 <div class="contact-state">{{ contact.state }}</div>
-                <div class="contact-url">{{ contact.url }}</div>
             </div>
         </li>
         `
@@ -163,7 +162,7 @@
       },
       methods: {
         fetchContacts: async function() {
-            const res = await axios.get(`http://` + location.hostname + `/` + this.zip);
+            const res = await axios.get("http://localhost:5000/" + this.zip);
             this.contacts = res.data
             console.log(this.contacts);
             return res
