@@ -7,11 +7,11 @@ clean: down
 
 ingest: deploy
 	# import law enforcement agencies
-	python import_from_csvs.py
+	true || python import_from_csvs.py
 	# import lawyers
-	python import_lawyer_from_datadir.py
+	true || python import_lawyer_from_datadir.py
 	# import geodata?
-	python import_geodata.py
+	true || python import_geodata.py
 
 deploy: images
 	daemon --chdir=$(CURDIR) --output=$(LOG_PATH) -- docker-compose up
@@ -31,10 +31,10 @@ images:
 services_working: nginx_proxy_working nginx_working webapp_working
 
 nginx_proxy_working: ingest
-	@curl --silent --fail http://localhost:12346/foo > /dev/null  || { echo "Nginx proxy to webapp is not working!"; tail -n 50 $(LOG_PATH); exit 1; }
+	@curl --silent --fail http://localhost/foo > /dev/null  || { echo "Nginx proxy to webapp is not working!"; tail -n 50 $(LOG_PATH); exit 1; }
 
 nginx_working: ingest
-	@curl --silent --fail http://localhost:12346/statictest > /dev/null || { echo "Nginx static files route is not working!"; tail -n 50 $(LOG_PATH); exit 1; }
+	@curl --silent --fail http://localhost/statictest > /dev/null || { echo "Nginx static files route is not working!"; tail -n 50 $(LOG_PATH); exit 1; }
 
 webapp_working: ingest
 	@curl --silent --fail http://localhost:12347/foo > /dev/null || { echo "The webapp is not working!"; tail -n 50 $(LOG_PATH); exit 1; }
