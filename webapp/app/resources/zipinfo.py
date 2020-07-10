@@ -155,7 +155,7 @@ class ZipInfoResource:
             # get law enforcement info
             # state level
             cursor.execute(
-                "SELECT name, state, url FROM departments WHERE dept_type ILIKE %(statepattern)s AND LOWER(state) = %(state)s",
+                "SELECT name, state, url FROM departments WHERE dept_type ILIKE %(statepattern)s AND state = %(state)s",  # state is already lowered in the DB
                 {"state": full_state.lower(), "statepattern": "%state%",},
             )
             state_level = cursor.fetchall()

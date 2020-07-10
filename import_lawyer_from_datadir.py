@@ -34,6 +34,7 @@ def main():
         cursor.execute(
             "UPDATE law_firms SET zipcode = LEFT(zipcode, 5) WHERE zipcode != LEFT(zipcode, 5)"
         )
+        cursor.execute("""CREATE INDEX ON law_firms USING HASH (zipcode)""")
         conn.commit()
 
 
