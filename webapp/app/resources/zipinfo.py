@@ -1,6 +1,7 @@
 """Get info about the given zipcode for the frontend."""
 import json
 import os
+import string
 import sys
 import time
 import traceback
@@ -119,6 +120,14 @@ class ZipInfoResource:
                 time.sleep(0.1)
 
     def on_get(self, request, response, **kwargs):
+        try:
+            zipcode = kwargs["zipcode"]
+        except KeyError:
+            return
+        if len(zipcode) != 5:
+            return
+        if set(zipcode) - set(string.digits):
+            return
         if self.conn is None:
             self._reinit()
 
