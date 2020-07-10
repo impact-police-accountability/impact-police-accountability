@@ -1,4 +1,5 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <body>
     <div id="app">
         <nav id="navbar">
@@ -10,7 +11,7 @@
         </nav>
         <div>Zip Code: <input v-model="location"></div>
         <button v-on:click="fetchContacts">Get Contacts</button>
-        <div v-if="location != ''">
+        <div v-if="contacts != null">
             <div class="legal-title">Legal Contacts</div>
             <ul class="legal-list">
                 <contact-card v-for="legal in contacts.legal_resources" v-bind:contact="legal"/>
@@ -48,36 +49,14 @@
       el: '#app',
       data: {
         location: "",
-        contacts: {
-            "government_resources": [{
-                "organization": "ORG1",
-                "contact_name": "Some Name",
-                "phone_number": "111-222-3333",
-                "address": "some address",
-                "url": "some url",
-                "email": "foo@bar.com"
-            }],
-            "law_enforcement_resources": [{
-                "organization": "ORG2",
-                "contact_name": "Some Other Name",
-                "phone_number": "111-222-3333",
-                "address": "some address",
-                "url": "some url",
-                "email": "foo@bar.com"
-            }],
-            "legal_resources": [{
-                "organization": "ORG3",
-                "contact_name": "Some Other Other Name",
-                "phone_number": "111-222-3333",
-                "address": "some address",
-                "url": "some url",
-                "email": "foo@bar.com"
-            }]
-        }
+        contacts: null
       },
       methods: {
-        fetchContacts: function() {
-            return "foo"
+        fetchContacts: async function(zip) {
+            const res = await axios.get(`http://localhost:5000/{zip}`);
+            this.contacts = res.data
+            console.log(this.contacts);
+            return res
         }
       }
     })
