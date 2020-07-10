@@ -42,6 +42,7 @@
             connect
         </div>
         <div class="contacts-tab" v-if="tab == 'contacts'">
+            <h1>Know who to call in your fight for justice</h1>
             <div>Zip Code: <input v-model="zip"></div>
             <button v-on:click="fetchContacts">Get Contacts</button>
             <div v-if="contacts != null">
@@ -86,7 +87,7 @@
             <div class="contact-card">
                 <span class="contact-name">{{ contact.name }}</span>
                 <span class="contact-state">{{ contact.state }}</span>
-                <span class="contact-urls">{{ contact.urls }}</span>
+                <span class="contact-url">{{ contact.url }}</span>
             </div>
         </li>
         `
