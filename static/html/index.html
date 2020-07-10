@@ -13,13 +13,33 @@
             template
         </div>
         <div class="about-tab" v-if="tab == 'about'">
-            about
+            <h1>About Us</h1>
+            <div>
+
+                <div>
+                    Law enforcement institutions in the United States are not subject to the same checks and balances as regular citizens. Practices such as qualified immunity and civil asset forfeiture have led to abuses of power by law enforcement agencies, including violence against citizens. 
+                </div>
+                
+                <div>
+                    Our mission is to connect civilians who have been harassed, abused, or detained by law enforcement with  legal representation who specialize in civil rights.
+                </div>
+
+                <div>
+                    Additionally, we want to provide those who have suffered injustice and mistreatment with a singular resource to contact their local, state, and national representatives in order to enact change, and hold officers, agencies, and overseeing bodies accountable. 
+                </div>
+
+                <div><h3>Actions</h3></div>
+
+                <div>
+                    If you believe your rights have been violated, you are entitled to file a criminal complaint with the Federal Bureau of Investigation (FBI), and/or a civil complaint under the Police Misconduct Statute through the Department of Justice’s Civil Rights Division. We also encourage you to submit a copy of your complaint to all offices representing your constituency, using the following form letter.
+                </div>
+            </div>
         </div>
         <div class="connect-tab" v-if="tab == 'connect'">
             connect
         </div>
         <div class="contacts-tab" v-if="tab == 'contacts'">
-            <div>Zip Code: <input v-model="location"></div>
+            <div>Zip Code: <input v-model="zip"></div>
             <button v-on:click="fetchContacts">Get Contacts</button>
             <div v-if="contacts != null">
                 <div class="legal-title">Legal Contacts</div>
@@ -70,17 +90,48 @@
         `
     })
 
+    Vue.component('complaint-template', {
+        props: [],
+        template: `
+        Bolded sections should be completed by the individual complainant 
+         
+        Your Address
+        Your Phone Number
+        Your Email Address (if sending via email)
+         
+        Date
+        Name of person letter refers to (if available)
+        Name of agency letter refers to
+        Street Address
+         
+        Dear Representative (e.g. state governor, Dept. of Justice, local law office):
+         
+        Re: (issue described)
+         
+        On (date), I (observed, experienced) a (breach of social justice) at (location and other important details).
+
+        Details of the experience (e.g. unlawful arrest or brutality; injuries sustained; evidence of similar misconduct - a “pattern or practice” of misconduct builds a stronger case) including details of officers involved if applicable. This event was an example of (kind of misconduct covered by law: excessive force, sexual assault, intentional false arrests, theft, intentional fabrication of evidence resulting in a loss of liberty to another, unlawful stops, searches or arrests.). I believe this event occurred on the basis of my (race, color, national origin, sex, religion, disability, other protected class. NOTE: law enforcement misconduct law does not require that any racial, religious, or other discriminatory motive existed.). 
+         
+        To resolve the problem, I would appreciate your (state the specific action you want: governmental action, orders to end the misconduct, changes in the agency's policies and procedures that resulted in or allowed the misconduct, fines, or imprisonment). Enclosed are copies (do not send originals) of my records (include video, testimonies).
+         
+        I look forward to your reply and a resolution to the (observed, experienced) injustice. Please contact me at the above address or by phone at (home and/or office numbers with area code).
+         
+        Sincerely,
+        Your name
+
+        `
+    })
+
     var app = new Vue({
       el: '#app',
       data: {
         tab: "contacts",
-        location: "",
+        zip: "",
         contacts: null
       },
       methods: {
-        fetchContacts: async function(zip) {
-	var hostname = location.hostname;
-	const res = await axios.get(`http://` + location.hostname + `/` + zip);
+        fetchContacts: async function() {
+            const res = await axios.get(`http://` + location.hostname + `/` + zip);
             this.contacts = res.data
             console.log(this.contacts);
             return res
