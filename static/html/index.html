@@ -10,7 +10,10 @@
             <span class="nav-el"><a href="#/connect" v-on:click="tab = 'connect'">>Connect</a></span>
         </nav>
         <div class="template-tab" v-if="tab == 'template'">
-            template
+            <h1>Template for contacting Representatives or LEOs</h1>
+            <div>
+                <complaint-template/>
+            </div>
         </div>
         <div class="about-tab" v-if="tab == 'about'">
             <h1>About Us</h1>
@@ -44,7 +47,7 @@
             <div v-if="contacts != null">
                 <div class="legal-title">Legal Contacts</div>
                 <ul class="legal-list">
-                    <contact-card v-for="legal in contacts.legal_resources" v-bind:contact="legal"/>
+                    <suit-contact-card v-for="legal in contacts.legal_resources" v-bind:contact="legal"/>
                 </ul>
                 <div class="elected-title">Elected Contacts</div>
                 <ul class="elected-list">
@@ -84,6 +87,21 @@
                 <span class="contact-name">{{ contact.name }}</span>
                 <span class="contact-phones">{{ contact.phones }}</span>
                 <span class="contact-urls">{{ contact.urls }}</span>
+                <span class="contact-emails">{{ contact.emails }}</span>
+            </div>
+        </li>
+        `
+    })
+
+    Vue.component('suit-contact-card', {
+        props: ["contact"],
+        template: `
+        <li>
+            <div class="contact-card">
+                <span class="contact-name">{{ contact.lawyer_name }}</span>
+                <span class="contact-firm">{{ contact.lawyer_firm_name }}</span>
+                <span class="contact-phone">{{ contact.phone_number }}</span>
+                <span class="contact-addr">{{ contact.street_address }}, {{ contact.city }}, {{ contact.state }}, {{ contact.zipcode }}</span>
                 <span class="contact-emails">{{ contact.emails }}</span>
             </div>
         </li>
@@ -131,7 +149,7 @@
       },
       methods: {
         fetchContacts: async function() {
-            const res = await axios.get(`http://` + location.hostname + `/` + zip);
+            const res = await axios.get(`http://` + location.hostname + `/` + this.zip);
             this.contacts = res.data
             console.log(this.contacts);
             return res
