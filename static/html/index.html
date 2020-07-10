@@ -18,7 +18,7 @@
             </ul>
             <div class="elected-title">Elected Contacts</div>
             <ul class="elected-list">
-                <contact-card v-for="government in contacts.government_resources" v-bind:contact="government"/>
+                <politico-contact-card v-for="government in contacts.government_resources" v-bind:contact="government"/>
             </ul>
             <div class="government-title">Government Contacts</div>
             <ul class="government-list">
@@ -40,6 +40,20 @@
                 <span class="contact-address">{{ contact.address }}</span>
                 <span class="contact-url">{{ contact.url }}</span>
                 <span class="contact-email">{{ contact.email }}</span>            
+            </div>
+        </li>
+        `
+    })
+
+    Vue.component('politico-contact-card', {
+        props: ["contact"],
+        template: `
+        <li>
+            <div class="contact-card">
+                <span class="contact-name">{{ contact.name }}</span>
+                <span class="contact-phones">{{ contact.phones }}</span>
+                <span class="contact-urls">{{ contact.urls }}</span>
+                <span class="contact-emails">{{ contact.emails }}</span>
             </div>
         </li>
         `
