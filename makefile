@@ -7,11 +7,11 @@ clean: down
 
 ingest: deploy
 	# import law enforcement agencies
-	true || python import_from_csvs.py
+	python import_from_csvs.py
 	# import lawyers
-	true || python import_lawyer_from_datadir.py
+	python import_lawyer_from_datadir.py
 	# import geodata?
-	true || python import_geodata.py
+	python import_geodata.py
 
 deploy: images
 	daemon --chdir=$(CURDIR) --output=$(LOG_PATH) -- docker-compose up
@@ -24,7 +24,10 @@ lint:
 down:
 	docker-compose down
 
-images:
+cachebust:
+	cat webapp/Dockerfile.template | perl -pe "s/CACHEBUST/$(shell date +%s)/" > webapp/Dockerfile
+
+images: cachebust
 	docker-compose build
 	grep image docker-compose.yaml | cut -f 2- -d: | grep : | xargs -n1 -t docker pull
 

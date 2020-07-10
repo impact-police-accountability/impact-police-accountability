@@ -27,7 +27,7 @@ RUN python3 -m pip install --upgrade --no-cache-dir \
     psycopg2 \
     requests
 
-RUN true 1594403835
+RUN true CACHEBUST
 
 COPY app app
 
