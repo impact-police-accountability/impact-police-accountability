@@ -32,6 +32,29 @@ def get_args():
     parser = argparse.ArgumentParser(description=__doc__)
     return vars(parser.parse_args())
 
+def collapse_federal_agencies(cursor):
+    # TODO: this ends up blowing away the URL attached to any of these in the state pages
+    print("Collapsing federal agencies...")
+    query = """
+    WITH federal_agencies AS (
+        DELETE FROM departments WHERE dept_type ILIKE '%federal%' RETURNING name
+    ),
+    unique_federal_agencies AS (
+        SELECT name FROM federal_agencies GROUP BY name ORDER BY name
+    )
+    INSERT INTO
+        departments (name, dept_type)
+    SELECT
+        name, 'federal'
+    FROM
+        unique_federal_agencies
+    """
+    cursor.execute(query)
+
+def remove_old_agencies(cursor):
+    print("Removing defunct/disbanded agencies...")
+    for badpattern in ("%defunct%", "%disband%"):
+        cursor.execute("DELETE FROM departments WHERE dept_type ILIKE %(badpattern)s", {"badpattern": badpattern})
 
 def ingest_from_csvs():
     with psycopg2.connect(**DBAUTH) as conn:
@@ -46,9 +69,10 @@ def ingest_from_csvs():
         for root, _, files in os.walk("data/departments/"):
             for ifile in files:
                 import_one_state(cursor, os.path.join(root, ifile))
-        # remove defunct/disbanded departments
-        for badpattern in ("%defunct%", "%disband%"):
-            cursor.execute("DELETE FROM departments WHERE dept_type ILIKE %(badpattern)s", {"badpattern": badpattern})
+
+        remove_old_agencies(cursor)
+        collapse_federal_agencies(cursor)
+
         conn.commit()
 
 

@@ -9,16 +9,19 @@ from config import DBAUTH
 
 def export_one_state(cursor, state):
     cursor.execute(
-        "select * from departments where state = %(state)s order by 1, 2, 3",
+        "SELECT * FROM departments WHERE state IS NOT DISTINCT FROM %(state)s ORDER by 1, 2, 3",
         {"state": state},
     )
     cols = [c.name for c in cursor.description]
     # make a csv with the name of the state?
     tablename = "departments"
     os.makedirs("data/{}".format(tablename), exist_ok=True)
-    with open(
-        "data/{}/{}.csv".format(tablename, "_".join(state.split())), "w"
-    ) as outfile:
+    if state:
+        outpath = "data/{}/{}.csv".format(tablename, "_".join(state.split()))
+    else:
+        outpath = "data/{}/federal.csv".format(tablename)
+
+    with open(outpath, "w") as outfile:
         writer = csv.DictWriter(outfile, cols, lineterminator="\n")
         writer.writeheader()
         writer.writerows(dict(x) for x in cursor)
@@ -29,9 +32,10 @@ def main():
     with psycopg2.connect(**DBAUTH) as conn:
         conn.cursor_factory = psycopg2.extras.RealDictCursor
         cursor = conn.cursor()
-        cursor.execute("select state from departments group by 1 order by 1")
+        cursor.execute("SELECT state FROM departments GROUP BY 1 ORDER BY 1")
         for state in [r["state"] for r in cursor]:
             export_one_state(cursor, state)
+        export_one_state(cursor, None)
 
 
 if "__main__" == __name__:
