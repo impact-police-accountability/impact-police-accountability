@@ -32,6 +32,7 @@ def get_args():
     parser = argparse.ArgumentParser(description=__doc__)
     return vars(parser.parse_args())
 
+
 def collapse_federal_agencies(cursor):
     # TODO: this ends up blowing away the URL attached to any of these in the state pages
     print("Collapsing federal agencies...")
@@ -51,10 +52,15 @@ def collapse_federal_agencies(cursor):
     """
     cursor.execute(query)
 
+
 def remove_old_agencies(cursor):
     print("Removing defunct/disbanded agencies...")
     for badpattern in ("%defunct%", "%disband%"):
-        cursor.execute("DELETE FROM departments WHERE dept_type ILIKE %(badpattern)s", {"badpattern": badpattern})
+        cursor.execute(
+            "DELETE FROM departments WHERE dept_type ILIKE %(badpattern)s",
+            {"badpattern": badpattern},
+        )
+
 
 def ingest_from_csvs():
     with psycopg2.connect(**DBAUTH) as conn:

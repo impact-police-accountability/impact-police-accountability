@@ -5,6 +5,7 @@ import string
 import sys
 import time
 import traceback
+from pprint import pprint
 
 import psycopg2
 import psycopg2.extras
@@ -29,7 +30,13 @@ def get_gov_info_for_zip(zipcode):
         },
     )
     response.raise_for_status()
-    return response.json()
+    data = response.json()
+    officials = data["officials"]
+    for ioffice in data["offices"]:
+        ioffice["officeName"] = ioffice.pop("name")
+        for official_idx in ioffice.pop("officialIndices"):
+            officials[official_idx].update(ioffice)
+    return data
 
 
 class ZipInfoResource:
@@ -142,7 +149,7 @@ class ZipInfoResource:
         city = info_from_zip["city"]
         full_state = self._state_abbr_to_full.get(state_abbr.upper(), "xxxxx")
         gov_info_for_zip = get_gov_info_for_zip(zipcode)
-        print(locals())
+        pprint(gov_info_for_zip, indent=4)
 
         with self.conn.cursor() as cursor:
             # get lawyer info
@@ -182,9 +189,12 @@ class ZipInfoResource:
             )
             local_level = cursor.fetchall()
             law_enforcement_info = local_level + state_level
+            for rowidx, row in enumerate(law_enforcement_info):
+                row["name"] = row["name"].title()
+                row["state"] = row["state"].title()
 
         res = {
-            "government_resources": gov_info_for_zip["officials"],
+            "government_resources": list(gov_info_for_zip["officials"][::-1]),
             "law_enforcement_resources": law_enforcement_info,
             "legal_resources": lawyer_info,
         }

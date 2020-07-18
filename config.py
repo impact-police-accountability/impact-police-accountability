@@ -1,5 +1,6 @@
 """Silly things that I needed somewhere to dump."""
 import os
+
 import boto3
 
 DBAUTH = {

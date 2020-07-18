@@ -1,70 +1,114 @@
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<body>
-    <div id="app">
-        <nav id="navbar">
-            <span class="nav-el">Team Police Accountability</span>
-            <span class="nav-el"><a href="#/contacts" v-on:click="tab = 'contacts'">Search</a></span>
-            <span class="nav-el"><a href="#/about" v-on:click="tab = 'about'">>About</a></span>
-            <span class="nav-el"><a href="#/template" v-on:click="tab = 'template'">>Template</a></span>
-            <span class="nav-el"><a href="#/connect" v-on:click="tab = 'connect'">>Connect</a></span>
-        </nav>
-        <div class="template-tab" v-if="tab == 'template'">
-            <h1>Template for contacting Representatives or LEOs</h1>
-            <div>
-                <complaint-template/>
-            </div>
-        </div>
-        <div class="about-tab" v-if="tab == 'about'">
-            <h1>About Us</h1>
-            <div>
-
-                <div>
-                    Law enforcement institutions in the United States are not subject to the same checks and balances as regular citizens. Practices such as qualified immunity and civil asset forfeiture have led to abuses of power by law enforcement agencies, including violence against citizens.
-                </div>
-
-                <div>
-                    Our mission is to connect civilians who have been harassed, abused, or detained by law enforcement with  legal representation who specialize in civil rights.
-                </div>
-
-                <div>
-                    Additionally, we want to provide those who have suffered injustice and mistreatment with a singular resource to contact their local, state, and national representatives in order to enact change, and hold officers, agencies, and overseeing bodies accountable.
-                </div>
-
-                <div><h3>Actions</h3></div>
-
-                <div>
-                    If you believe your rights have been violated, you are entitled to file a criminal complaint with the Federal Bureau of Investigation (FBI), and/or a civil complaint under the Police Misconduct Statute through the Department of Justice’s Civil Rights Division. We also encourage you to submit a copy of your complaint to all offices representing your constituency, using the following form letter.
-                </div>
-            </div>
-        </div>
-        <div class="connect-tab" v-if="tab == 'connect'">
-            connect
-        </div>
-        <div class="contacts-tab" v-if="tab == 'contacts'">
-            <h1>Know who to call in your fight for justice</h1>
-            <div>Zip Code: <input v-model="zip"></div>
-            <button v-on:click="fetchContacts">Get Contacts</button>
-            <div v-if="contacts != null">
-                <div class="legal-title">Legal Contacts</div>
-                <ul class="legal-list">
-                    <suit-contact-card v-for="legal in contacts.legal_resources" v-bind:contact="legal"/>
-                </ul>
-                <div class="elected-title">Elected Contacts</div>
-                <ul class="elected-list">
-                    <politico-contact-card v-for="government in contacts.government_resources" v-bind:contact="government"/>
-                </ul>
-                <div class="government-title">Government Contacts</div>
-                <ul class="government-list">
-                    <leo-contact-card v-for="leo in contacts.law_enforcement_resources" v-bind:contact="leo"/>
-                </ul>
-            </div>
-        </div>
+<html>
+ <head>
+  <script src="https://cdn.jsdelivr.net/npm/vue">
+  </script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js">
+  </script>
+ </head>
+ <body>
+  <div id="app">
+   <nav id="navbar">
+    <span class="nav-el">
+     Team Police Accountability
+    </span>
+    <span class="nav-el">
+     <a href="#/contacts" v-on:click="tab = 'contacts'">
+      Search
+     </a>
+    </span>
+    <span class="nav-el">
+     <a href="#/about" v-on:click="tab = 'about'">
+      &gt;About
+     </a>
+    </span>
+    <span class="nav-el">
+     <a href="#/template" v-on:click="tab = 'template'">
+      &gt;Template
+     </a>
+    </span>
+    <span class="nav-el">
+     <a href="#/connect" v-on:click="tab = 'connect'">
+      &gt;Connect
+     </a>
+    </span>
+   </nav>
+   <div class="template-tab" v-if="tab == 'template'">
+    <h1>
+     Template for contacting Representatives or LEOs
+    </h1>
+    <div>
+     <complaint-template>
+     </complaint-template>
     </div>
-</body>
-
-<script type="text/javascript">
-    Vue.component('contact-card', {
+   </div>
+   <div class="about-tab" v-if="tab == 'about'">
+    <h1>
+     About Us
+    </h1>
+    <div>
+     <div>
+      Law enforcement institutions in the United States are not subject to the same checks and balances as regular citizens.
+      Practices such as qualified immunity and civil asset forfeiture have led to abuses of power by law enforcement agencies, including violence against citizens.
+     </div>
+     <div>
+      Our mission is to connect civilians who have been harassed, abused, or detained by law enforcement with legal representation who specialize in civil rights.
+     </div>
+     <div>
+      Additionally, we want to provide those who have suffered injustice and mistreatment with a singular resource to contact their local, state, and national representatives in order to enact change, and hold officers, agencies, and overseeing bodies accountable.
+     </div>
+     <div>
+      <h3>
+       Actions
+      </h3>
+     </div>
+     <div>
+      If you believe your rights have been violated, you are entitled to file a criminal complaint with the Federal Bureau of Investigation (FBI), and/or a civil complaint under the Police Misconduct Statute through the Department of Justice's Civil Rights Division.
+      We also encourage you to submit a copy of your complaint to all offices representing your constituency, using the following form letter.
+     </div>
+    </div>
+   </div>
+   <div class="connect-tab" v-if="tab == 'connect'">
+    connect
+   </div>
+   <div class="contacts-tab" v-if="tab == 'contacts'">
+    <h1>
+     Know who to call in your fight for justice
+    </h1>
+    <div>
+     Zip Code:
+     <input v-model="zip"/>
+    </div>
+    <button v-on:click="fetchContacts">
+     Get Contacts
+    </button>
+    <div v-if="contacts != null">
+     <div class="legal-title">
+      Legal Contacts
+     </div>
+     <ul class="legal-list">
+      <suit-contact-card v-bind:contact="legal" v-for="legal in contacts.legal_resources">
+      </suit-contact-card>
+     </ul>
+     <div class="gov-title">
+      Government Officials
+     </div>
+     <ul class="gov-list">
+      <politico-contact-card v-bind:contact="government" v-for="government in contacts.government_resources">
+      </politico-contact-card>
+     </ul>
+     <div class="leo-title">
+      Law Enforcement Agencies
+     </div>
+     <ul class="leo-list">
+      <leo-contact-card v-bind:contact="leo" v-for="leo in contacts.law_enforcement_resources">
+      </leo-contact-card>
+     </ul>
+    </div>
+   </div>
+  </div>
+ </body>
+ <script type="text/javascript">
+  Vue.component('contact-card', {
         props: ["contact"],
         template: `
         <li>
@@ -85,8 +129,7 @@
         template: `
         <li>
             <div class="contact-card">
-                <div class="contact-name"><a href="{{ contact.url }}"> {{ contact.name }}</a></div>
-                <div class="contact-state">{{ contact.state }}</div>
+                <div class="contact-name"><a v-bind:href=contact.url>{{ contact.name }}</a></div>
             </div>
         </li>
         `
@@ -98,6 +141,7 @@
         <li>
             <div class="contact-card">
                 <div class="contact-name">{{ contact.name }}</div>
+                <div class="contact-name">{{ contact.officeName }}</div>
                 <div class="contact-phones">{{ contact.phones }}</div>
                 <div class="contact-urls">{{ contact.urls }}</div>
                 <div class="contact-emails">{{ contact.emails }}</div>
@@ -112,7 +156,7 @@
         <li>
             <div class="contact-card">
                 <div class="contact-name">{{ contact.lawyer_name }}</div>
-                <div class="contact-firm">{{ contact.lawyer_firm_name }}</div>
+                <div class="contact-firm">{{ contact.law_firm_name }}</div>
                 <div class="contact-phone">{{ contact.phone_number }}</div>
                 <div class="contact-addr">{{ contact.street_address }}, {{ contact.city }}, {{ contact.state }}, {{ contact.zipcode }}</div>
                 <div class="contact-emails">{{ contact.emails }}</div>
@@ -169,4 +213,5 @@
         }
       }
     })
-</script>
+ </script>
+</html>

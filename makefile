@@ -49,4 +49,4 @@ nginx_working: ingest
 	@curl --silent --fail http://localhost:$(IPA_PORT_NGINX)/statictest > /dev/null || { echo "Nginx static files route is not working!"; tail -n 50 $(LOG_PATH); exit 1; }
 
 webapp_working: ingest
-	@curl --silent --fail http://localhost:$(IPA_PORT_WEBAPP)/foo > /dev/null || { echo "The webapp is not working!"; tail -n 50 $(LOG_PATH); exit 1; }
+	python wait_on_webapp.py
