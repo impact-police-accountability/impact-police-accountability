@@ -5,7 +5,7 @@ services:
     environment:
         POSTGRES_PASSWORD: supersecret
     ports:
-        - 12345:5432
+        - ${IPA_PORT_POSTGRES}:5432
     restart: on-failure
     volumes:
       - data_pg:/var/lib/postgresql/data
@@ -13,7 +13,7 @@ services:
     image: webapp
     build: ./webapp
     ports:
-        - 12347:8000
+        - ${IPA_PORT_WEBAPP}:8000
     environment:
         POSTGRES_PASSWORD: supersecret
         GCE_API_KEY: "${GCE_API_KEY}"
@@ -25,7 +25,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./static/html:/usr/share/nginx/html:ro
     ports:
-        - 80:80
+        - ${IPA_PORT_NGINX}:80
     links:
         - webapp:webapp
 

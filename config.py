@@ -1,4 +1,5 @@
 """Silly things that I needed somewhere to dump."""
+import os
 import boto3
 
 DBAUTH = {
@@ -6,7 +7,7 @@ DBAUTH = {
     "dbname": "postgres",
     "host": "localhost",
     "password": "supersecret",
-    "port": 12345,
+    "port": int(os.environ["IPA_PORT_POSTGRES"]),
     "user": "postgres",
 }
 
