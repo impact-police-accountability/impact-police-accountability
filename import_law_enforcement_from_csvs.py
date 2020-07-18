@@ -46,6 +46,9 @@ def ingest_from_csvs():
         for root, _, files in os.walk("data/departments/"):
             for ifile in files:
                 import_one_state(cursor, os.path.join(root, ifile))
+        # remove defunct/disbanded departments
+        for badpattern in ("%defunct%", "%disband%"):
+            cursor.execute("DELETE FROM departments WHERE dept_type ILIKE %(badpattern)s", {"badpattern": badpattern})
         conn.commit()
 
 
