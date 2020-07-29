@@ -57,9 +57,17 @@ def import_one_key(cursor, key):
         address = worksfor["address"]
         # add law firm
         cursor.execute(
-            """INSERT INTO law_firms
-            (   law_firm_name  ,   phone_number  ,   street_address  ,   city  ,   state  ,   zipcode   ) VALUES
-            ( %(law_firm_name)s, %(phone_number)s, %(street_address)s, %(city)s, %(state)s, %(zipcode)s ) ON CONFLICT DO NOTHING""",
+            """
+INSERT INTO law_firms
+(   law_firm_name  ,   phone_number  ,   street_address  ,   city  ,   state  ,   zipcode   ) VALUES
+( %(law_firm_name)s, %(phone_number)s, %(street_address)s, %(city)s, %(state)s, %(zipcode)s ) ON CONFLICT (phone_number) DO UPDATE
+SET 
+    law_firm_name = coalesce(nullif(law_firms.law_firm_name,''), excluded.law_firm_name), 
+    street_address = coalesce(nullif(law_firms.street_address,''), excluded.street_address), 
+    city = coalesce(nullif(law_firms.city,''), excluded.city),
+    state = coalesce(nullif(law_firms.state,''), excluded.state),
+    zipcode = coalesce(nullif(law_firms.zipcode,''), excluded.zipcode)
+""",
             {
                 "city": address["addressLocality"],
                 "law_firm_name": worksfor["name"],
