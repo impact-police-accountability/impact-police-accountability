@@ -1,0 +1,34 @@
+version: v1.0
+name: Parallel
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: 'Block #1'
+    task:
+      jobs:
+        - name: 'Job #1'
+          commands:
+            - checkout
+            - ls
+        - name: 'Job #2'
+          commands:
+            - checkout
+            - ls
+        - name: 'Job #3'
+          commands:
+            - checkout
+            - ls
+  - name: 'Block #2'
+    task:
+      jobs:
+        - name: 'Job #1'
+          commands: []
+promotions:
+  - name: Promotion 1
+    pipeline_file: pipeline_2.yml
+    auto_promote:
+      when: branch = 'master' AND result = 'passed'
+  - name: Promotion 2
+    pipeline_file: pipeline_3.yml
